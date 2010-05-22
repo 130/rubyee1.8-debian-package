@@ -50,5 +50,5 @@ rubyee1.8 (1.8.7.2010.01-1) lenny; urgency=low
       - source/lib/rdoc/ri/ri_paths.rb
       - source/mkconfig.rb
 
- -- Leonid Borisenko <leo.borisenko@gmail.com>  Thu, 22 May 2010 13:03:45 +0300
+ -- Leonid Borisenko <leo.borisenko@gmail.com>  Sat, 22 May 2010 13:03:45 +0300
 
