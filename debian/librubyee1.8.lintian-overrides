@@ -1,0 +1,4 @@
+# After discussions at Bug#367024, a note is mentioned in debian/copyright.
+librubyee1.8 binary: possible-gpl-code-linked-with-openssl
+# known & ignored.
+librubyee1.8 binary: package-name-doesnt-match-sonames

@@ -1,0 +1,58 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## change_ruby_paths_from_1.8_to_ee1.8.dpatch by Leonid Borisenko <leo.borisenko@gmail.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Change string '1.8' to 'ee1.8' in Ruby system paths.
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/instruby.rb rubyee-1.8.7.2010.01/source/instruby.rb
+--- source~/instruby.rb	2010-01-20 20:01:26.000000000 +0200
++++ source/instruby.rb	2010-05-22 14:15:05.000000000 +0300
+@@ -272,7 +272,7 @@
+   if $rdocdir
+     puts "installing rdoc"
+ 
+-    ridatadir = File.join(CONFIG['datadir'], 'ri/$(MAJOR).$(MINOR)/system')
++    ridatadir = File.join(CONFIG['datadir'], 'ri/ee$(MAJOR).$(MINOR)/system')
+     Config.expand(ridatadir)
+     makedirs [ridatadir]
+     install_recursive($rdocdir, ridatadir, :mode => $data_mode)
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/lib/rdoc/ri/ri_paths.rb rubyee-1.8.7.2010.01/source/lib/rdoc/ri/ri_paths.rb
+--- source~/lib/rdoc/ri/ri_paths.rb	2010-01-20 20:01:26.000000000 +0200
++++ source/lib/rdoc/ri/ri_paths.rb	2010-05-22 14:15:44.000000000 +0300
+@@ -28,7 +28,7 @@
+ 
+     version = Config::CONFIG['ruby_version']
+ 
+-    base    = File.join(Config::CONFIG['datadir'], "ri", version)
++    base    = File.join(Config::CONFIG['datadir'], "ri", "ee#{version}")
+     SYSDIR  = File.join(base, "system")
+     SITEDIR = File.join(base, "site")
+     homedir = ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/mkconfig.rb rubyee-1.8.7.2010.01/source/mkconfig.rb
+--- source~/mkconfig.rb	2010-01-20 20:01:26.000000000 +0200
++++ source/mkconfig.rb	2010-05-22 14:15:10.000000000 +0300
+@@ -102,7 +102,7 @@
+ 
+ drive = File::PATH_SEPARATOR == ';'
+ 
+-prefix = '/lib/ruby/' + RUBY_VERSION.sub(/\.\d+$/, '') + '/' + RUBY_PLATFORM
++prefix = '/lib/ruby/' + 'ee' + RUBY_VERSION.sub(/\.\d+$/, '') + '/' + RUBY_PLATFORM
+ print "  TOPDIR = File.dirname(__FILE__).chomp!(#{prefix.dump})\n"
+ print "  DESTDIR = ", (drive ? "TOPDIR && TOPDIR[/\\A[a-z]:/i] || " : ""), "'' unless defined? DESTDIR\n"
+ print "  CONFIG = {}\n"
+@@ -141,11 +141,11 @@
+ print(*v_others)
+ print <<EOS
+   CONFIG["ruby_version"] = "$(MAJOR).$(MINOR)"
+-  CONFIG["rubylibdir"] = "$(libdir)/ruby/$(ruby_version)"
++  CONFIG["rubylibdir"] = "$(libdir)/ruby/ee$(ruby_version)"
+   CONFIG["archdir"] = "$(rubylibdir)/$(arch)"
+-  CONFIG["sitelibdir"] = "$(sitedir)/$(ruby_version)"
++  CONFIG["sitelibdir"] = "$(sitedir)/ee$(ruby_version)"
+   CONFIG["sitearchdir"] = "$(sitelibdir)/$(sitearch)"
+-  CONFIG["vendorlibdir"] = "$(vendordir)/$(ruby_version)"
++  CONFIG["vendorlibdir"] = "$(vendordir)/ee$(ruby_version)"
+   CONFIG["vendorarchdir"] = "$(vendorlibdir)/$(sitearch)"
+   CONFIG["topdir"] = File.dirname(__FILE__)
+   MAKEFILE_CONFIG = {}

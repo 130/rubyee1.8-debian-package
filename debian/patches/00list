@@ -1,0 +1,14 @@
+# Debian specific patch
+102_configure.in-crosscompile
+803_soap_massmem
+808_rexml_document_transitive
+809_update_lib_README
+901_ri_pager.dpatch
+902_extra_search_path.dpatch
+903_rdoc_documents.dpatch
+090613_exclude_rdoc.dpatch
+090812_openssl_x509_warning
+100522_change_ruby_paths_from_1.8_to_ee1.8.dpatch
+# Back ported patch or fixes before the upstream's new release
+#091125_gc_check
+#100312_timeout-fix.dpatch

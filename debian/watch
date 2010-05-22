@@ -1,0 +1,5 @@
+version=3
+http://rubyforge.org/frs/?group_id=5833 \
+  /frs/download\.php/\d{5}/ruby-enterprise-(1\.8\.\d)-(\d{4}\.\d{2})\.tar\.gz \
+  debian uupdate
+

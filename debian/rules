@@ -1,0 +1,188 @@
+#!/usr/bin/make -f
+
+ruby_ver = ee1.8
+
+arch_name = $(subst linux-gnu,linux-,$(patsubst %linux-gnu,%linux,$(DEB_BUILD_GNU_TYPE)))
+ruby_libdir = usr/lib/ruby/$(ruby_ver)
+ruby_archdir = usr/lib/ruby/$(ruby_ver)/$(arch_name)
+bin_dir = usr/bin
+man_dir = usr/share/man/man1
+
+DEB_SRCDIR=source
+DPATCH_WORKDIR=$(DEB_SRCDIR)
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/makefile.mk
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/dpatch.mk
+include /usr/share/dpatch/dpatch.make
+
+DEB_AUTO_UPDATE_AUTOCONF = YES
+
+CFLAGS := -fno-strict-aliasing -g
+CXXFLAGS := -fno-strict-aliasing -g
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -g -O0
+else
+	CFLAGS += -g -O2
+endif
+
+DEB_CONFIGURE_SCRIPT_ENV += LIBS=" -ltcmalloc_minimal"
+
+ifeq ($(DEB_BUILD_GNU_CPU),i386)
+	DEB_CONFIGURE_USER_FLAGS += --enable-frame-address
+endif
+ifneq (,$(filter $(DEB_BUILD_GNU_CPU),i486 i586 i686))
+	DEB_CONFIGURE_USER_FLAGS += --enable-frame-address
+	DEB_CONFIGURE_USER_FLAGS += --with-extra-site-search-path='/usr/local/lib/site_ruby/$(ruby_ver)/i386-linux'
+	DEB_CONFIGURE_USER_FLAGS += --with-extra-search-path='/usr/lib/ruby/$(ruby_ver)/i386-linux'
+endif
+DEB_CONFIGURE_USER_FLAGS += --enable-mbari-api
+DEB_CONFIGURE_USER_FLAGS += --program-suffix=$(ruby_ver)
+DEB_CONFIGURE_USER_FLAGS += --enable-ipv6
+DEB_CONFIGURE_USER_FLAGS += --with-lookup-order-hack=INET
+DEB_CONFIGURE_USER_FLAGS += --disable-rpath
+DEB_CONFIGURE_USER_FLAGS += --disable-install-doc
+DEB_CONFIGURE_USER_FLAGS += --with-sitedir='/usr/local/lib/site_ruby'
+DEB_CONFIGURE_USER_FLAGS += --with-default-kcode=none
+DEB_CONFIGURE_USER_FLAGS += --with-dbm-type=gdbm_compat
+DEB_CONFIGURE_USER_FLAGS += --with-bundled-sha1
+DEB_CONFIGURE_USER_FLAGS += --with-bundled-md5
+DEB_CONFIGURE_USER_FLAGS += --with-bundled-rmd160
+
+DEB_MAKE_BUILD_TARGET = all test
+#DEB_MAKE_BUILD_TARGET = all test test-all
+
+DEB_INSTALL_DIRS_ri$(ruby_ver) += $(bin_dir)
+DEB_INSTALL_DIRS_ri$(ruby_ver) += $(man_dir)
+DEB_INSTALL_MANPAGES_ri$(ruby_ver) += debian/ri$(ruby_ver).1
+
+DEB_INSTALL_DIRS_ruby$(ruby_ver) += $(bin_dir)
+DEB_INSTALL_DIRS_ruby$(ruby_ver) += $(man_dir)
+DEB_INSTALL_DOCS_ruby$(ruby_ver) += 
+DEB_INSTALL_DOCS_ruby$(ruby_ver) += $(DEB_SRCDIR)/LEGAL
+DEB_INSTALL_DOCS_ruby$(ruby_ver) += $(DEB_SRCDIR)/README
+DEB_INSTALL_DOCS_ruby$(ruby_ver) += $(DEB_SRCDIR)/README.ja
+DEB_INSTALL_DOCS_ruby$(ruby_ver) += $(DEB_SRCDIR)/ToDo
+DEB_INSTALL_DOCS_ruby$(ruby_ver) += $(DEB_SRCDIR)/NEWS
+DEB_INSTALL_DOCS_ruby$(ruby_ver) += $(DEB_SRCDIR)/doc/NEWS-1.8.0
+DEB_INSTALL_MANPAGES_ruby$(ruby_ver) += debian/testrb$(ruby_ver).1
+DEB_INSTALL_MANPAGES_ruby$(ruby_ver) += debian/erb$(ruby_ver).1
+DEB_INSTALL_MANPAGES_ruby$(ruby_ver) += debian/rdoc$(ruby_ver).1
+DEB_INSTALL_MANPAGES_ruby$(ruby_ver) += debian/irb$(ruby_ver).1
+
+DEB_INSTALL_DOCS_libruby$(ruby_ver) += $(DEB_SRCDIR)/lib/README
+DEB_INSTALL_DOCS_libruby$(ruby_ver) += $(DEB_SRCDIR)/NEWS
+DEB_INSTALL_DOCS_libruby$(ruby_ver) += $(DEB_SRCDIR)/doc/NEWS-1.8.0
+DEB_INSTALL_DOCS_libruby$(ruby_ver) += $(DEB_SRCDIR)/doc/*.rd*
+
+DEB_INSTALL_DOCS_ruby$(ruby_ver)-dev += $(DEB_SRCDIR)/README.EXT*
+
+DEB_COMPRESS_EXCLUDE = .rb .pl .py .scm .awk .dat
+DEB_SHLIBDEPS_INCLUDE = $(CURDIR)/debian/libruby$(ruby_ver)/usr/lib
+DEB_DH_MAKESHLIBS_ARGS_ALL = -m$(ruby_ver) -V
+
+# CDBS dpatch rules doesn't allow to set dpatch '--workdir' option!
+# So this rule was copypasted from /usr/share/cdbs/1/rules/dpatch.mk
+# with addition of ${_WORKDIR} variable.
+# Variable ${_WORKDIR} is setted in /usr/share/dpatch/dpatch.make
+deapply-dpatches:
+	$(MAKE) -f debian/rules reverse-config
+	dpatch ${_WORKDIR} deapply-all
+	rm -rf ${DPATCH_WORKDIR}/debian/patched
+	rm -f debian/stamp-patched
+# after reverting patches, we don't need update-config because:
+#  - the tree is already in a consistent state.
+#  - the initialisation of this routine is already in charge of making
+#    the tree not only consistent, but also prepared to accept patching.
+
+# CDBS dpatch rules doesn't allow to set dpatch '--workdir' option!
+# So this rule was copypasted from /usr/share/cdbs/1/rules/dpatch.mk
+# with addition of ${_WORKDIR} variable.
+# Variable ${_WORKDIR} is setted in /usr/share/dpatch/dpatch.make
+debian/stamp-patched:
+	$(MAKE) -f debian/rules reverse-config
+	dpatch ${_WORKDIR} apply-all
+	$(MAKE) -f debian/rules update-config
+	touch $@
+
+binary-install/libruby$(ruby_ver):: $(patsubst %,binary-install/%,$(filter-out libruby$(ruby_ver),$(DEB_PACKAGES)))
+	install -d $(CURDIR)/debian/$(cdbs_curpkg)/$(ruby_archdir)
+	for s in $(CURDIR)/debian/$(cdbs_curpkg).*.in; do \
+	    sed -e 's/@@arch@@/$(arch_name)/g' \
+		< $$s > `expr $$s : '\(.*\)\.in$$'`; \
+	done
+
+	dh_movefiles -p$(cdbs_curpkg) usr/lib/ruby/$(ruby_ver)
+
+	cd $(DEB_SRCDIR)/ext && \
+	for dir in \
+	    bigdecimal curses digest dl enumerator etc \
+	    fcntl iconv io nkf pty racc readline openssl sdbm socket \
+	    stringio strscan syck syslog thread zlib \
+	    ; \
+	do \
+	    install -d "$(CURDIR)/debian/$(cdbs_curpkg)/usr/share/doc/$(cdbs_curpkg)/$$dir"; \
+	    find $$dir \
+	  	    -name '*README*' -or -name '*.html*' -or \
+	  	    -name '*.txt*' -or -name '*.rd*' | \
+		while read fname; \
+		do \
+		    cp "$$fname" \
+		     	"$(CURDIR)/debian/$(cdbs_curpkg)/usr/share/doc/$(cdbs_curpkg)/$$dir"; \
+		done; \
+		rmdir "$(CURDIR)/debian/$(cdbs_curpkg)/usr/share/doc/$(cdbs_curpkg)/$$dir" 2>/dev/null || :; \
+	    done
+
+binary-install/ruby$(ruby_ver)-dev::
+	dh_movefiles -p$(cdbs_curpkg) \
+	    usr/lib/libruby$(ruby_ver)-static.a \
+	    usr/lib/ruby/$(ruby_ver)/mkmf.rb
+	(cd $(CURDIR)/debian/tmp/usr/lib/ruby/$(ruby_ver)/$(arch_name) && \
+	    for h in *.h; do \
+		echo usr/lib/ruby/$(ruby_ver)/$(arch_name)/$$h; \
+		chmod a-x $$h; \
+	    done) | xargs dh_movefiles -p$(cdbs_curpkg)
+
+binary-install/ruby$(ruby_ver)::
+	dh_movefiles -p$(cdbs_curpkg) \
+	    usr/bin/ruby$(ruby_ver) \
+	    usr/bin/erb$(ruby_ver) \
+	    usr/bin/testrb$(ruby_ver) \
+	    usr/bin/rdoc$(ruby_ver) \
+	    usr/bin/irb$(ruby_ver) \
+	    usr/share/man/man1/ruby$(ruby_ver).1
+
+binary-install/ri$(ruby_ver)::
+	dh_movefiles -p$(cdbs_curpkg) $(bin_dir)/$(cdbs_curpkg)
+binary-post-install/ri$(ruby_ver)::
+	$(DEB_MAKE_INVOKE) install-doc DESTDIR=$(CURDIR)/debian/$(cdbs_curpkg)
+	install -m444 $(CURDIR)/debian/$(cdbs_curpkg).1 \
+	    $(CURDIR)/debian/$(cdbs_curpkg)/$(man_dir)/$(cdbs_curpkg).1
+
+$(patsubst %,binary-post-install/%,$(DEB_PACKAGES))::
+	bash $(CURDIR)/debian/fixshebang.sh ruby$(ruby_ver) \
+	    '$(CURDIR)/debian/$(cdbs_curpkg)/$(bin_dir)'
+	bash $(CURDIR)/debian/fixshebang.sh ruby$(ruby_ver) \
+	    '$(CURDIR)/debian/$(cdbs_curpkg)/usr/share/doc/$(cdbs_curpkg)/examples'
+	sh $(CURDIR)/debian/rmshebang.sh \
+	    '$(CURDIR)/debian/$(cdbs_curpkg)/$(ruby_libdir)'
+
+clean::
+	rm -f \
+	    .installed.list \
+	    configure \
+	    parse.c \
+	    debian/libruby$(ruby_ver).postinst \
+	    debian/libruby$(ruby_ver).prerm
+
+	if [ -f $(DEB_SRCDIR)/config.guess.cdbs-orig ]; \
+	then \
+	    mv $(DEB_SRCDIR)/config.guess.cdbs-orig \
+		$(DEB_SRCDIR)/config.guess; \
+	fi
+	if [ -f $(DEB_SRCDIR)/config.sub.cdbs-orig ]; \
+	then \
+	    mv $(DEB_SRCDIR)/config.sub.cdbs-orig \
+		$(DEB_SRCDIR)/config.sub; \
+	fi

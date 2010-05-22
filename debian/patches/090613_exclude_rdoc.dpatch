@@ -1,0 +1,21 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 090613_exclude_rdoc.dpatch by Daigo Moriwaki <daigo@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Exclude files from the RDoc generation.
+## DP:   - mkconfig.rb, which causes an error.
+## DP:   - test_*.rb, which are test cases. 
+
+@DPATCH@
+diff -urNad trunk~/common.mk trunk/common.mk
+--- trunk~/common.mk	2008-08-04 14:05:38.000000000 +0900
++++ trunk/common.mk	2009-06-13 16:02:44.000000000 +0900
+@@ -260,7 +260,7 @@
+ 
+ rdoc: $(PROGRAM) PHONY
+ 	@echo Generating RDoc documentation
+-	$(RUNRUBY) "$(srcdir)/bin/rdoc" --all --ri --op "$(RDOCOUT)" "$(srcdir)"
++	$(RUNRUBY) "$(srcdir)/bin/rdoc" --all --ri --op "$(RDOCOUT)" --exclude mkconfig.rb --exclude test_ "$(srcdir)"
+ 
+ what-where-doc: no-install-doc
+ no-install-doc: pre-no-install-doc dont-install-doc post-no-install-doc

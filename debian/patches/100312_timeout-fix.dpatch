@@ -1,0 +1,154 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## timeout-fix.dpatch by Lucas Nussbaum <lucas@lucas-nussbaum.net>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix problem with threads+timeouts.
+## DP: Backports from upstream. See http://redmine.ruby-lang.org/issues/show/2739, https://bugs.launchpad.net/ubuntu/lucid/+source/eglibc/+bug/520715, Debian#539987
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' ruby1.8-1.8.7.249~/ChangeLog ruby1.8-1.8.7.249/ChangeLog
+--- ruby1.8-1.8.7.249~/ChangeLog	2010-01-10 11:30:06.000000000 +0100
++++ ruby1.8-1.8.7.249/ChangeLog	2010-03-12 07:07:47.000000000 +0100
+@@ -1,3 +1,18 @@
++Fri Jan 22 01:22:27 2010  NAKAMURA Usaku  <usa@ruby-lang.org>
++
++	* eval.c (thread_timer, rb_thread_stop_timer): check the timing of
++	  stopping timer.  patch from KOSAKI Motohiro <kosaki.motohiro _AT_
++	  jp.fujitsu.com>
++
++	* eval.c (rb_thread_start_timer): NetBSD5 seems to be hung when calling
++	  pthread_create() from pthread_atfork()'s parent handler.
++
++	* io.c (pipe_open): workaround for NetBSD5. stop timer thread before
++	  fork(), and start it if needed.
++
++	* process.c (rb_f_fork, rb_f_system): ditto.
++	  fixed [ruby-dev:40074]
++
+ Fri Jan  8 18:51:11 2010  Nobuyoshi Nakada  <nobu@ruby-lang.org>
+
+	* io.c (io_fwrite): preserve errno.  [ruby-core:27425]
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' ruby1.8-1.8.7.249~/eval.c ruby1.8-1.8.7.249/eval.c
+--- ruby1.8-1.8.7.249~/eval.c	2009-12-21 09:11:42.000000000 +0100
++++ ruby1.8-1.8.7.249/eval.c	2010-03-12 07:07:49.000000000 +0100
+@@ -12292,6 +12292,8 @@
+     pthread_t thread;
+ } time_thread = {PTHREAD_COND_INITIALIZER, PTHREAD_MUTEX_INITIALIZER};
+ 
++static int timer_stopping;
++
+ #define safe_mutex_lock(lock) \
+     pthread_mutex_lock(lock); \
+     pthread_cleanup_push((void (*)_((void *)))pthread_mutex_unlock, lock)
+@@ -12316,6 +12318,9 @@
+ #define WAIT_FOR_10MS() \
+     pthread_cond_timedwait(&running->cond, &running->lock, get_ts(&to, PER_NANO/100))
+     while ((err = WAIT_FOR_10MS()) == EINTR || err == ETIMEDOUT) {
++	if (timer_stopping)
++	    break;
++
+ 	if (!rb_thread_critical) {
+ 	    rb_thread_pending = 1;
+ 	    if (rb_trap_immediate) {
+@@ -12343,7 +12348,9 @@
+     safe_mutex_lock(&time_thread.lock);
+     if (pthread_create(&time_thread.thread, 0, thread_timer, args) == 0) {
+ 	thread_init = 1;
++#if !defined(__NetBSD__) && !defined(linux)
+ 	pthread_atfork(0, 0, rb_thread_stop_timer);
++#endif
+ 	pthread_cond_wait(&start, &time_thread.lock);
+     }
+     pthread_cleanup_pop(1);
+@@ -12354,10 +12361,12 @@
+ {
+     if (!thread_init) return;
+     safe_mutex_lock(&time_thread.lock);
++    timer_stopping = 1;
+     pthread_cond_signal(&time_thread.cond);
+     thread_init = 0;
+     pthread_cleanup_pop(1);
+     pthread_join(time_thread.thread, NULL);
++    timer_stopping = 0;
+ }
+ #elif defined(HAVE_SETITIMER)
+ static void
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' ruby1.8-1.8.7.249~/io.c ruby1.8-1.8.7.249/io.c
+--- ruby1.8-1.8.7.249~/io.c	2009-11-25 09:45:13.000000000 +0100
++++ ruby1.8-1.8.7.249/io.c	2010-03-12 07:07:49.000000000 +0100
+@@ -3245,6 +3245,9 @@
+     }
+ 
+   retry:
++#if defined(__NetBSD__) || defined(linux)
++    rb_thread_stop_timer();
++#endif
+     switch ((pid = fork())) {
+       case 0:			/* child */
+ 	if (modef & FMODE_READABLE) {
+@@ -3272,11 +3275,17 @@
+ 		    ruby_sourcefile, ruby_sourceline, pname);
+ 	    _exit(127);
+ 	}
++#if defined(__NetBSD__) || defined(linux)
++	rb_thread_start_timer();
++#endif
+ 	rb_io_synchronized(RFILE(orig_stdout)->fptr);
+ 	rb_io_synchronized(RFILE(orig_stderr)->fptr);
+ 	return Qnil;
+ 
+       case -1:			/* fork failed */
++#if defined(__NetBSD__) || defined(linux)
++	rb_thread_start_timer();
++#endif
+ 	if (errno == EAGAIN) {
+ 	    rb_thread_sleep(1);
+ 	    goto retry;
+@@ -3297,6 +3306,9 @@
+ 	break;
+ 
+       default:			/* parent */
++#if defined(__NetBSD__) || defined(linux)
++	rb_thread_start_timer();
++#endif
+ 	if (pid < 0) rb_sys_fail(pname);
+ 	else {
+ 	    VALUE port = io_alloc(rb_cIO);
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' ruby1.8-1.8.7.249~/process.c ruby1.8-1.8.7.249/process.c
+--- ruby1.8-1.8.7.249~/process.c	2008-06-29 11:34:43.000000000 +0200
++++ ruby1.8-1.8.7.249/process.c	2010-03-12 07:07:49.000000000 +0100
+@@ -1330,7 +1330,14 @@
+     fflush(stderr);
+ #endif
+ 
++#if defined(__NetBSD__) || defined(linux)
++    before_exec();
++    pid = fork();
++    after_exec();
++    switch (pid) {
++#else
+     switch (pid = fork()) {
++#endif
+       case 0:
+ #ifdef linux
+ 	after_exec();
+@@ -1570,6 +1577,9 @@
+ 
+     chfunc = signal(SIGCHLD, SIG_DFL);
+   retry:
++#if defined(__NetBSD__) || defined(linux)
++    before_exec();
++#endif
+     pid = fork();
+     if (pid == 0) {
+ 	/* child process */
+@@ -1577,6 +1587,9 @@
+ 	rb_protect(proc_exec_args, (VALUE)&earg, NULL);
+ 	_exit(127);
+     }
++#if defined(__NetBSD__) || defined(linux)
++    after_exec();
++#endif
+     if (pid < 0) {
+ 	if (errno == EAGAIN) {
+ 	    rb_thread_sleep(1);

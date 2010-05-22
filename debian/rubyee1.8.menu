@@ -1,0 +1,2 @@
+?package(rubyee1.8):needs="text" section="Applications/Programming"\
+  title="Ruby EE (irbee1.8)" command="/usr/bin/irbee1.8"

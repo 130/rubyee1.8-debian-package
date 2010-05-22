@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 090812_openssl_x509_warning.dpatch by akira yamada <akira@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: suppress warning.
+## DP: this is backport of a part of r21772.
+
+@DPATCH@
+diff -urNad ruby1.8-1.8.7.174~/ext/openssl/ossl_x509ext.c ruby1.8-1.8.7.174/ext/openssl/ossl_x509ext.c
+--- ruby1.8-1.8.7.174~/ext/openssl/ossl_x509ext.c	2007-06-09 00:02:04.000000000 +0900
++++ ruby1.8-1.8.7.174/ext/openssl/ossl_x509ext.c	2009-08-12 19:45:16.000000000 +0900
+@@ -110,6 +110,7 @@
+     VALUE obj;
+ 
+     MakeX509ExtFactory(klass, obj, ctx);
++    rb_iv_set(obj, "@config", Qnil);
+ 
+     return obj;
+ }

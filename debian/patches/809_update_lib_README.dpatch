@@ -1,0 +1,20 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 809_update_lib_README.dpatch by Lucas Nussbaum <lucas@lucas-nussbaum.net>
+##
+## Fixes bug #414727
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad trunk~/lib/README trunk/lib/README
+--- trunk~/lib/README	2007-08-22 05:30:19.000000000 +0200
++++ trunk/lib/README	2008-02-01 17:50:42.000000000 +0100
+@@ -33,7 +33,6 @@
+ mailread.rb	reads mail headers
+ mathn.rb	extended math operation
+ matrix.rb	matrix calculation library
+-mkmf.rb		Makefile maker
+ monitor.rb	exclusive region monitor for thread
+ mutex_m.rb	mutex mixin
+ net/ftp.rb	ftp access

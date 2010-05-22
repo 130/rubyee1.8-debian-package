@@ -1,0 +1,54 @@
+rubyee1.8 (1.8.7.2010.01-1) lenny; urgency=low
+
+  * Initial release.
+  * 'debian' directory was copied from official Debian ruby1.8 (1.8.7.249-3)
+    package (maintained by akira yamada) with following changes:
+    - debian/control
+      * package names suffix is changed from '1.8' to 'ee1.8'
+      * tcl8.4-dev, tk8.4-dev are removed from Build-Depends
+      * libgoogle-perftools-dev added in Build-Depends
+      * added explicit dependency of rubyee1.8 from librubyee1.8
+        (${shlibs:Depends} substitution doesn't add this dependency
+        automatically because of static build)
+      * libtcltk-ruby1.8 package is removed
+      * ruby1.8-examples package is removed
+      * ruby1.8-elisp package is removed
+    - debian/rules
+      * ruby_ver changed to 'ee1.8'
+      * '--enable-shared' configure option is removed (i.e. Ruby is statically
+        builded)
+      * '--enable-pthread' configure option is removed
+      * '--with-tklib', '--with-tcllib', '--with-tcl-include' configure options
+        are removed (i.e. Ruby/Tk library building is disabled)
+      * rules related to packaging libtcltk-ruby1.8 are removed
+      * rules related to packaging ruby1.8-examples are removed
+      * rules related to packaging ruby1.8-elisp are removed
+    - debian/patches
+      * 091125_gc_check.dpatch is refreshed and disabled
+      * 100312_timeout-fix dpatch is disabled
+    - debian/watch
+      * URL changed to Ruby EE official download page at rubyforge.org
+    - debian/extfixup_rubylibs.sh
+      * removed (was used only in packaging libtcltk-ruby1.8)
+    - debian/extfixup_examples.sh
+      * removed (seems like doesn't used at all)
+    - debian/ruby1.8-elisp*
+      * removed (were used only in packaging ruby1.8-elisp)
+    - in following files suffix '1.8' was changed to suffix 'ee1.8':
+      * debian/rubyee1.8.menu
+      * debian/*.(rd|1)$ (i.e. all manpages)
+      * debian/librubyee1.8-lintian.overrides
+      * debian/librubyee1.8.postinst.in
+      * debian/librubyee1.8.prerm.in
+      * debian/README.Debian
+  * Ruby executable is linked with tcmalloc_minimal library.
+  * Ruby is builded with MBARI API.
+  * Added debian/patches/100522_change_ruby_paths_from_1.8_to_ee1.8.dpatch,
+    which changes string '1.8' to 'ee1.8' in Ruby system paths in following
+    files:
+      - source/instruby.rb
+      - source/lib/rdoc/ri/ri_paths.rb
+      - source/mkconfig.rb
+
+ -- Leonid Borisenko <leo.borisenko@gmail.com>  Thu, 22 May 2010 13:03:45 +0300
+
