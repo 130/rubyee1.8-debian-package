@@ -6,8 +6,8 @@
 
 @DPATCH@
 diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/instruby.rb rubyee-1.8.7.2010.01/source/instruby.rb
---- source~/instruby.rb	2010-01-20 20:01:26.000000000 +0200
-+++ source/instruby.rb	2010-05-22 14:15:05.000000000 +0300
+--- rubyee-1.8.7.2010.01~/source/instruby.rb	2010-01-20 20:01:26.000000000 +0200
++++ rubyee-1.8.7.2010.01/source/instruby.rb	2010-05-22 14:15:05.000000000 +0300
 @@ -272,7 +272,7 @@
    if $rdocdir
      puts "installing rdoc"
@@ -18,8 +18,8 @@ diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' 
      makedirs [ridatadir]
      install_recursive($rdocdir, ridatadir, :mode => $data_mode)
 diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/lib/rdoc/ri/ri_paths.rb rubyee-1.8.7.2010.01/source/lib/rdoc/ri/ri_paths.rb
---- source~/lib/rdoc/ri/ri_paths.rb	2010-01-20 20:01:26.000000000 +0200
-+++ source/lib/rdoc/ri/ri_paths.rb	2010-05-22 14:15:44.000000000 +0300
+--- rubyee-1.8.7.2010.01~/source/lib/rdoc/ri/ri_paths.rb	2010-01-20 20:01:26.000000000 +0200
++++ rubyee-1.8.7.2010.01/source/lib/rdoc/ri/ri_paths.rb	2010-05-22 14:15:44.000000000 +0300
 @@ -28,7 +28,7 @@
  
      version = Config::CONFIG['ruby_version']
@@ -30,8 +30,8 @@ diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' 
      SITEDIR = File.join(base, "site")
      homedir = ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']
 diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/mkconfig.rb rubyee-1.8.7.2010.01/source/mkconfig.rb
---- source~/mkconfig.rb	2010-01-20 20:01:26.000000000 +0200
-+++ source/mkconfig.rb	2010-05-22 14:15:10.000000000 +0300
+--- rubyee-1.8.7.2010.01~/source/mkconfig.rb	2010-01-20 20:01:26.000000000 +0200
++++ rubyee-1.8.7.2010.01/source/mkconfig.rb	2010-05-22 14:15:10.000000000 +0300
 @@ -102,7 +102,7 @@
  
  drive = File::PATH_SEPARATOR == ';'

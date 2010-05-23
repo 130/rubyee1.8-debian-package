@@ -8,9 +8,9 @@
 ## DP: Debian specific patch
 
 @DPATCH@
-diff -urNad ruby1.8-1.8.6~/ext/.document ruby1.8-1.8.6/ext/.document
---- ruby1.8-1.8.6~/ext/.document	2007-02-13 08:01:19.000000000 +0900
-+++ ruby1.8-1.8.6/ext/.document	2007-03-13 16:39:20.000000000 +0900
+diff -urNad ruby1.8-1.8.6~/source/ext/.document ruby1.8-1.8.6/source/ext/.document
+--- ruby1.8-1.8.6~/source/ext/.document	2007-02-13 08:01:19.000000000 +0900
++++ ruby1.8-1.8.6/source/ext/.document	2007-03-13 16:39:20.000000000 +0900
 @@ -1,6 +1,8 @@
  # Add files to this as they become documented
  
@@ -20,9 +20,9 @@ diff -urNad ruby1.8-1.8.6~/ext/.document ruby1.8-1.8.6/ext/.document
  iconv/iconv.c
  nkf/lib/kconv.rb
  nkf/nkf.c
-diff -urNad ruby1.8-1.8.6~/lib/cgi/.document ruby1.8-1.8.6/lib/cgi/.document
---- ruby1.8-1.8.6~/lib/cgi/.document	2007-02-13 08:01:19.000000000 +0900
-+++ ruby1.8-1.8.6/lib/cgi/.document	2007-03-13 16:40:00.000000000 +0900
+diff -urNad ruby1.8-1.8.6~/source/lib/cgi/.document ruby1.8-1.8.6/source/lib/cgi/.document
+--- ruby1.8-1.8.6~/source/lib/cgi/.document	2007-02-13 08:01:19.000000000 +0900
++++ ruby1.8-1.8.6/source/lib/cgi/.document	2007-03-13 16:40:00.000000000 +0900
 @@ -1,2 +1,2 @@
 +session
  session.rb

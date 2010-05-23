@@ -8,9 +8,9 @@
 ## DP: refreshed for 1.8.7.72 so it can unapply - only whitespace changes.
 
 @DPATCH@
-diff -burN ruby1.8-1.8.7.72.orig/lib/soap/baseData.rb ruby1.8-1.8.7.72/lib/soap/baseData.rb
---- ruby1.8-1.8.7.72.orig/lib/soap/baseData.rb	2008-09-10 07:36:30.000000000 +0200
-+++ ruby1.8-1.8.7.72/lib/soap/baseData.rb	2008-09-10 07:36:40.000000000 +0200
+diff -burN ruby1.8-1.8.7.72.orig/source/lib/soap/baseData.rb ruby1.8-1.8.7.72/source/lib/soap/baseData.rb
+--- ruby1.8-1.8.7.72.orig/source/lib/soap/baseData.rb	2008-09-10 07:36:30.000000000 +0200
++++ ruby1.8-1.8.7.72/source/lib/soap/baseData.rb	2008-09-10 07:36:40.000000000 +0200
 @@ -1,5 +1,5 @@
  # soap/baseData.rb: SOAP4R - Base type library
 -# Copyright (C) 2000, 2001, 2003-2005  NAKAMURA, Hiroshi <nahi@ruby-lang.org>.
@@ -71,9 +71,9 @@ diff -burN ruby1.8-1.8.7.72.orig/lib/soap/baseData.rb ruby1.8-1.8.7.72/lib/soap/
  end
  
  
-diff -burN ruby1.8-1.8.7.72.orig/lib/soap/mapping/mapping.rb ruby1.8-1.8.7.72/lib/soap/mapping/mapping.rb
---- ruby1.8-1.8.7.72.orig/lib/soap/mapping/mapping.rb	2008-09-10 07:36:30.000000000 +0200
-+++ ruby1.8-1.8.7.72/lib/soap/mapping/mapping.rb	2008-09-10 07:36:40.000000000 +0200
+diff -burN ruby1.8-1.8.7.72.orig/source/lib/soap/mapping/mapping.rb ruby1.8-1.8.7.72/source/lib/soap/mapping/mapping.rb
+--- ruby1.8-1.8.7.72.orig/source/lib/soap/mapping/mapping.rb	2008-09-10 07:36:30.000000000 +0200
++++ ruby1.8-1.8.7.72/source/lib/soap/mapping/mapping.rb	2008-09-10 07:36:40.000000000 +0200
 @@ -42,7 +42,8 @@
      soap_obj = nil
      protect_threadvars(:SOAPMarshalDataKey, :SOAPExternalCES, :SOAPMarshalNoReference) do
@@ -159,9 +159,9 @@ diff -burN ruby1.8-1.8.7.72.orig/lib/soap/mapping/mapping.rb ruby1.8-1.8.7.72/li
    def self.schema_type_definition(klass)
      class_schema_variable(:schema_type, klass)
    end
-diff -burN ruby1.8-1.8.7.72.orig/lib/soap/mapping/registry.rb ruby1.8-1.8.7.72/lib/soap/mapping/registry.rb
---- ruby1.8-1.8.7.72.orig/lib/soap/mapping/registry.rb	2008-09-10 07:36:30.000000000 +0200
-+++ ruby1.8-1.8.7.72/lib/soap/mapping/registry.rb	2008-09-10 07:36:40.000000000 +0200
+diff -burN ruby1.8-1.8.7.72.orig/source/lib/soap/mapping/registry.rb ruby1.8-1.8.7.72/source/lib/soap/mapping/registry.rb
+--- ruby1.8-1.8.7.72.orig/source/lib/soap/mapping/registry.rb	2008-09-10 07:36:30.000000000 +0200
++++ ruby1.8-1.8.7.72/lib/source/soap/mapping/registry.rb	2008-09-10 07:36:40.000000000 +0200
 @@ -133,23 +133,24 @@
  
  private
@@ -199,9 +199,9 @@ diff -burN ruby1.8-1.8.7.72.orig/lib/soap/mapping/registry.rb ruby1.8-1.8.7.72/l
          end
        EOS
      end
-diff -burN ruby1.8-1.8.7.72.orig/lib/soap/mapping/wsdlliteralregistry.rb ruby1.8-1.8.7.72/lib/soap/mapping/wsdlliteralregistry.rb
---- ruby1.8-1.8.7.72.orig/lib/soap/mapping/wsdlliteralregistry.rb	2008-09-10 07:36:30.000000000 +0200
-+++ ruby1.8-1.8.7.72/lib/soap/mapping/wsdlliteralregistry.rb	2008-09-10 07:36:40.000000000 +0200
+diff -burN ruby1.8-1.8.7.72.orig/source/lib/soap/mapping/wsdlliteralregistry.rb ruby1.8-1.8.7.72/source/lib/soap/mapping/wsdlliteralregistry.rb
+--- ruby1.8-1.8.7.72.orig/source/lib/soap/mapping/wsdlliteralregistry.rb	2008-09-10 07:36:30.000000000 +0200
++++ ruby1.8-1.8.7.72/source/lib/soap/mapping/wsdlliteralregistry.rb	2008-09-10 07:36:40.000000000 +0200
 @@ -360,36 +360,27 @@
      end
    end
@@ -258,9 +258,9 @@ diff -burN ruby1.8-1.8.7.72.orig/lib/soap/mapping/wsdlliteralregistry.rb ruby1.8
  
    # it caches @@schema_element.  this means that @@schema_element must not be
    # changed while a lifetime of a WSDLLiteralRegistry.
-diff -burN ruby1.8-1.8.7.72.orig/lib/soap/rpc/driver.rb ruby1.8-1.8.7.72/lib/soap/rpc/driver.rb
---- ruby1.8-1.8.7.72.orig/lib/soap/rpc/driver.rb	2008-09-10 07:36:30.000000000 +0200
-+++ ruby1.8-1.8.7.72/lib/soap/rpc/driver.rb	2008-09-10 07:36:40.000000000 +0200
+diff -burN ruby1.8-1.8.7.72.orig/source/lib/soap/rpc/driver.rb ruby1.8-1.8.7.72/source/lib/soap/rpc/driver.rb
+--- ruby1.8-1.8.7.72.orig/source/lib/soap/rpc/driver.rb	2008-09-10 07:36:30.000000000 +0200
++++ ruby1.8-1.8.7.72/source/lib/soap/rpc/driver.rb	2008-09-10 07:36:40.000000000 +0200
 @@ -222,18 +222,9 @@
      add_method_interface(name, param_count)
    end
@@ -291,9 +291,9 @@ diff -burN ruby1.8-1.8.7.72.orig/lib/soap/rpc/driver.rb ruby1.8-1.8.7.72/lib/soa
  end
  
  
-diff -burN ruby1.8-1.8.7.72.orig/lib/xsd/charset.rb ruby1.8-1.8.7.72/lib/xsd/charset.rb
---- ruby1.8-1.8.7.72.orig/lib/xsd/charset.rb	2008-09-10 07:36:30.000000000 +0200
-+++ ruby1.8-1.8.7.72/lib/xsd/charset.rb	2008-09-10 07:36:40.000000000 +0200
+diff -burN ruby1.8-1.8.7.72.orig/source/lib/xsd/charset.rb ruby1.8-1.8.7.72/source/lib/xsd/charset.rb
+--- ruby1.8-1.8.7.72.orig/source/lib/xsd/charset.rb	2008-09-10 07:36:30.000000000 +0200
++++ ruby1.8-1.8.7.72/source/lib/xsd/charset.rb	2008-09-10 07:36:40.000000000 +0200
 @@ -167,7 +167,7 @@
      SJISRegexp =~ str
    end

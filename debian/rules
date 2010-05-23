@@ -9,7 +9,6 @@ bin_dir = usr/bin
 man_dir = usr/share/man/man1
 
 DEB_SRCDIR=source
-DPATCH_WORKDIR=$(DEB_SRCDIR)
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/makefile.mk
@@ -81,30 +80,6 @@ DEB_INSTALL_DOCS_ruby$(ruby_ver)-dev += $(DEB_SRCDIR)/README.EXT*
 DEB_COMPRESS_EXCLUDE = .rb .pl .py .scm .awk .dat
 DEB_SHLIBDEPS_INCLUDE = $(CURDIR)/debian/libruby$(ruby_ver)/usr/lib
 DEB_DH_MAKESHLIBS_ARGS_ALL = -m$(ruby_ver) -V
-
-# CDBS dpatch rules doesn't allow to set dpatch '--workdir' option!
-# So this rule was copypasted from /usr/share/cdbs/1/rules/dpatch.mk
-# with addition of ${_WORKDIR} variable.
-# Variable ${_WORKDIR} is setted in /usr/share/dpatch/dpatch.make
-deapply-dpatches:
-	$(MAKE) -f debian/rules reverse-config
-	dpatch ${_WORKDIR} deapply-all
-	rm -rf ${DPATCH_WORKDIR}/debian/patched
-	rm -f debian/stamp-patched
-# after reverting patches, we don't need update-config because:
-#  - the tree is already in a consistent state.
-#  - the initialisation of this routine is already in charge of making
-#    the tree not only consistent, but also prepared to accept patching.
-
-# CDBS dpatch rules doesn't allow to set dpatch '--workdir' option!
-# So this rule was copypasted from /usr/share/cdbs/1/rules/dpatch.mk
-# with addition of ${_WORKDIR} variable.
-# Variable ${_WORKDIR} is setted in /usr/share/dpatch/dpatch.make
-debian/stamp-patched:
-	$(MAKE) -f debian/rules reverse-config
-	dpatch ${_WORKDIR} apply-all
-	$(MAKE) -f debian/rules update-config
-	touch $@
 
 binary-install/libruby$(ruby_ver):: $(patsubst %,binary-install/%,$(filter-out libruby$(ruby_ver),$(DEB_PACKAGES)))
 	install -d $(CURDIR)/debian/$(cdbs_curpkg)/$(ruby_archdir)

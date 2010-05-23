@@ -5,9 +5,9 @@
 ## DP: Debian specific patch
 
 @DPATCH@
-diff -urNad ruby1.8-1.8.6~/configure.in ruby1.8-1.8.6/configure.in
---- ruby1.8-1.8.6~/configure.in	2007-02-28 22:23:42.000000000 +0900
-+++ ruby1.8-1.8.6/configure.in	2007-03-13 16:33:00.000000000 +0900
+diff -urNad ruby1.8-1.8.6~/source/configure.in ruby1.8-1.8.6/source/configure.in
+--- ruby1.8-1.8.6~/source/configure.in	2007-02-28 22:23:42.000000000 +0900
++++ ruby1.8-1.8.6/source/configure.in	2007-03-13 16:33:00.000000000 +0900
 @@ -1618,6 +1618,19 @@
      AC_DEFINE_UNQUOTED(RUBY_SEARCH_PATH,"$search_path")
  fi
@@ -28,9 +28,9 @@ diff -urNad ruby1.8-1.8.6~/configure.in ruby1.8-1.8.6/configure.in
  AC_ARG_WITH(mantype,
  		[  --with-mantype=TYPE specify man page type; TYPE is one of man and doc],
  		[
-diff -urNad ruby1.8-1.8.6~/ruby.c ruby1.8-1.8.6/ruby.c
---- ruby1.8-1.8.6.111~/ruby.c	2007-02-13 08:01:19.000000000 +0900
-+++ ruby1.8-1.8.6.111/ruby.c	2007-03-13 16:33:11.000000000 +0900
+diff -urNad ruby1.8-1.8.6~/source/ruby.c ruby1.8-1.8.6/source/ruby.c
+--- ruby1.8-1.8.6.111~/source/ruby.c	2007-02-13 08:01:19.000000000 +0900
++++ ruby1.8-1.8.6.111/source/ruby.c	2007-03-13 16:33:11.000000000 +0900
 @@ -320,6 +320,9 @@
      incpush(RUBY_RELATIVE(RUBY_SITE_THIN_ARCHLIB));
  #endif

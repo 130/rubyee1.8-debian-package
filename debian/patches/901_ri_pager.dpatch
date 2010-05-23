@@ -5,9 +5,9 @@
 ## DP: Debian specific patch
 
 @DPATCH@
-diff -urNad ruby1.8-1.8.6~/lib/rdoc/ri/ri_display.rb ruby1.8-1.8.6/lib/rdoc/ri/ri_display.rb
---- ruby1.8-1.8.6~/lib/rdoc/ri/ri_display.rb	2007-02-13 08:01:19.000000000 +0900
-+++ ruby1.8-1.8.6/lib/rdoc/ri/ri_display.rb	2007-03-13 16:31:31.000000000 +0900
+diff -urNad ruby1.8-1.8.6~/source/lib/rdoc/ri/ri_display.rb ruby1.8-1.8.6/source/lib/rdoc/ri/ri_display.rb
+--- ruby1.8-1.8.6~/source/lib/rdoc/ri/ri_display.rb	2007-02-13 08:01:19.000000000 +0900
++++ ruby1.8-1.8.6/source/lib/rdoc/ri/ri_display.rb	2007-03-13 16:31:31.000000000 +0900
 @@ -210,7 +210,7 @@
  
    def setup_pager

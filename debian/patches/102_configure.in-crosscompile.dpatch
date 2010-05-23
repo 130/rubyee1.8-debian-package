@@ -6,9 +6,9 @@
 ## DP: replace AC_FUNC_SETPGRP with something that works when cross-compiling
 
 @DPATCH@
-diff -urNad trunk~/configure.in trunk/configure.in
---- trunk~/configure.in	2007-09-07 09:38:51.000000000 +0200
-+++ trunk/configure.in	2008-03-21 10:52:50.000000000 +0100
+diff -urNad trunk~/source/configure.in trunk/source/configure.in
+--- trunk~/source/configure.in	2007-09-07 09:38:51.000000000 +0200
++++ trunk/source/configure.in	2008-03-21 10:52:50.000000000 +0100
 @@ -635,7 +635,25 @@
  fi
  

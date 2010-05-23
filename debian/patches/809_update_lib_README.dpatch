@@ -7,9 +7,9 @@
 ## DP: No description.
 
 @DPATCH@
-diff -urNad trunk~/lib/README trunk/lib/README
---- trunk~/lib/README	2007-08-22 05:30:19.000000000 +0200
-+++ trunk/lib/README	2008-02-01 17:50:42.000000000 +0100
+diff -urNad trunk~/source/lib/README trunk/source/lib/README
+--- trunk~/source/lib/README	2007-08-22 05:30:19.000000000 +0200
++++ trunk/source/lib/README	2008-02-01 17:50:42.000000000 +0100
 @@ -33,7 +33,6 @@
  mailread.rb	reads mail headers
  mathn.rb	extended math operation
