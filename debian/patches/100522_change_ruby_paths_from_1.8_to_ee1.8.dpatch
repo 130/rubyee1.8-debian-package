@@ -5,9 +5,67 @@
 ## DP: Change string '1.8' to 'ee1.8' in Ruby system paths.
 
 @DPATCH@
-diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/instruby.rb rubyee-1.8.7.2010.01/source/instruby.rb
---- rubyee-1.8.7.2010.01~/source/instruby.rb	2010-01-20 20:01:26.000000000 +0200
-+++ rubyee-1.8.7.2010.01/source/instruby.rb	2010-05-22 14:15:05.000000000 +0300
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee1.8-1.8.7.2010.01~/source/Makefile.in rubyee1.8-1.8.7.2010.01/source/Makefile.in
+--- rubyee1.8-1.8.7.2010.01~/source/Makefile.in	2010-01-20 20:01:26.000000000 +0200
++++ rubyee1.8-1.8.7.2010.01/source/Makefile.in	2010-05-23 21:07:20.000000000 +0300
+@@ -30,7 +30,7 @@
+ RDOCTARGET = @RDOCTARGET@
+ 
+ EXTOUT = @EXTOUT@
+-RIDATADIR = $(DESTDIR)$(datadir)/ri/$(MAJOR).$(MINOR)/system
++RIDATADIR = $(DESTDIR)$(datadir)/ri/ee$(MAJOR).$(MINOR)/system
+ 
+ empty =
+ OUTFLAG = @OUTFLAG@$(empty)
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee1.8-1.8.7.2010.01~/source/configure rubyee1.8-1.8.7.2010.01/source/configure
+--- rubyee1.8-1.8.7.2010.01~/source/configure	2010-01-20 23:36:33.000000000 +0200
++++ rubyee1.8-1.8.7.2010.01/source/configure	2010-05-23 21:07:20.000000000 +0300
+@@ -10004,8 +10004,8 @@
+     RUBY_SITE_LIB_PATH="`eval echo \\"$SITE_DIR\\" | sed 's|^NONE/|'"$prefix"'/|'`"
+     ;;
+ esac
+-RUBY_LIB_PATH="${RUBY_LIB_PREFIX}/${MAJOR}.${MINOR}"
+-RUBY_SITE_LIB_PATH2="${RUBY_SITE_LIB_PATH}/${MAJOR}.${MINOR}"
++RUBY_LIB_PATH="${RUBY_LIB_PREFIX}/ee${MAJOR}.${MINOR}"
++RUBY_SITE_LIB_PATH2="${RUBY_SITE_LIB_PATH}/ee${MAJOR}.${MINOR}"
+ 
+ cat >>confdefs.h <<_ACEOF
+ #define RUBY_LIB "${RUBY_LIB_PATH}"
+@@ -10037,7 +10037,7 @@
+     RUBY_VENDOR_LIB_PATH="`eval echo \\"$VENDOR_DIR\\" | sed 's|^NONE/|'"$prefix"'/|'`"
+     ;;
+ esac
+-RUBY_VENDOR_LIB_PATH2="${RUBY_VENDOR_LIB_PATH}/${MAJOR}.${MINOR}"
++RUBY_VENDOR_LIB_PATH2="${RUBY_VENDOR_LIB_PATH}/ee${MAJOR}.${MINOR}"
+ 
+ cat >>confdefs.h <<_ACEOF
+ #define RUBY_VENDOR_LIB "${RUBY_VENDOR_LIB_PATH}"
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee1.8-1.8.7.2010.01~/source/configure.in rubyee1.8-1.8.7.2010.01/source/configure.in
+--- rubyee1.8-1.8.7.2010.01~/source/configure.in	2010-05-23 21:07:17.000000000 +0300
++++ rubyee1.8-1.8.7.2010.01/source/configure.in	2010-05-23 21:08:40.000000000 +0300
+@@ -1766,8 +1766,8 @@
+     RUBY_SITE_LIB_PATH="`eval echo \\"$SITE_DIR\\" | sed 's|^NONE/|'"$prefix"'/|'`"
+     ;;
+ esac
+-RUBY_LIB_PATH="${RUBY_LIB_PREFIX}/${MAJOR}.${MINOR}"
+-RUBY_SITE_LIB_PATH2="${RUBY_SITE_LIB_PATH}/${MAJOR}.${MINOR}"
++RUBY_LIB_PATH="${RUBY_LIB_PREFIX}/ee${MAJOR}.${MINOR}"
++RUBY_SITE_LIB_PATH2="${RUBY_SITE_LIB_PATH}/ee${MAJOR}.${MINOR}"
+ 
+ AC_DEFINE_UNQUOTED(RUBY_LIB, "${RUBY_LIB_PATH}")
+ AC_DEFINE_UNQUOTED(RUBY_SITE_LIB, "${RUBY_SITE_LIB_PATH}")
+@@ -1786,7 +1786,7 @@
+     RUBY_VENDOR_LIB_PATH="`eval echo \\"$VENDOR_DIR\\" | sed 's|^NONE/|'"$prefix"'/|'`"
+     ;;
+ esac
+-RUBY_VENDOR_LIB_PATH2="${RUBY_VENDOR_LIB_PATH}/${MAJOR}.${MINOR}"
++RUBY_VENDOR_LIB_PATH2="${RUBY_VENDOR_LIB_PATH}/ee${MAJOR}.${MINOR}"
+ 
+ AC_DEFINE_UNQUOTED(RUBY_VENDOR_LIB, "${RUBY_VENDOR_LIB_PATH}")
+ AC_DEFINE_UNQUOTED(RUBY_VENDOR_LIB2, "${RUBY_VENDOR_LIB_PATH2}")
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee1.8-1.8.7.2010.01~/source/instruby.rb rubyee1.8-1.8.7.2010.01/source/instruby.rb
+--- rubyee1.8-1.8.7.2010.01~/source/instruby.rb	2010-01-20 20:01:26.000000000 +0200
++++ rubyee1.8-1.8.7.2010.01/source/instruby.rb	2010-05-23 21:07:20.000000000 +0300
 @@ -272,7 +272,7 @@
    if $rdocdir
      puts "installing rdoc"
@@ -17,9 +75,9 @@ diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' 
      Config.expand(ridatadir)
      makedirs [ridatadir]
      install_recursive($rdocdir, ridatadir, :mode => $data_mode)
-diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/lib/rdoc/ri/ri_paths.rb rubyee-1.8.7.2010.01/source/lib/rdoc/ri/ri_paths.rb
---- rubyee-1.8.7.2010.01~/source/lib/rdoc/ri/ri_paths.rb	2010-01-20 20:01:26.000000000 +0200
-+++ rubyee-1.8.7.2010.01/source/lib/rdoc/ri/ri_paths.rb	2010-05-22 14:15:44.000000000 +0300
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee1.8-1.8.7.2010.01~/source/lib/rdoc/ri/ri_paths.rb rubyee1.8-1.8.7.2010.01/source/lib/rdoc/ri/ri_paths.rb
+--- rubyee1.8-1.8.7.2010.01~/source/lib/rdoc/ri/ri_paths.rb	2010-01-20 20:01:26.000000000 +0200
++++ rubyee1.8-1.8.7.2010.01/source/lib/rdoc/ri/ri_paths.rb	2010-05-23 21:07:20.000000000 +0300
 @@ -28,7 +28,7 @@
  
      version = Config::CONFIG['ruby_version']
@@ -29,9 +87,9 @@ diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' 
      SYSDIR  = File.join(base, "system")
      SITEDIR = File.join(base, "site")
      homedir = ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']
-diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee-1.8.7.2010.01~/source/mkconfig.rb rubyee-1.8.7.2010.01/source/mkconfig.rb
---- rubyee-1.8.7.2010.01~/source/mkconfig.rb	2010-01-20 20:01:26.000000000 +0200
-+++ rubyee-1.8.7.2010.01/source/mkconfig.rb	2010-05-22 14:15:10.000000000 +0300
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rubyee1.8-1.8.7.2010.01~/source/mkconfig.rb rubyee1.8-1.8.7.2010.01/source/mkconfig.rb
+--- rubyee1.8-1.8.7.2010.01~/source/mkconfig.rb	2010-01-20 20:01:26.000000000 +0200
++++ rubyee1.8-1.8.7.2010.01/source/mkconfig.rb	2010-05-23 21:07:20.000000000 +0300
 @@ -102,7 +102,7 @@
  
  drive = File::PATH_SEPARATOR == ';'
