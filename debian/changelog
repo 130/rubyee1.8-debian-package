@@ -1,3 +1,17 @@
+rubyee1.8 (1.8.7.2010.01-2) lenny; urgency=low
+
+  * Updated debian/patches/100522_change_ruby_paths_from_1.8_to_ee1.8.dpatch.
+    String '1.8' in Ruby system paths changed to 'ee1.8' in additional files:
+      - source/configure
+      - source/configure.in
+      - source/Makefile.in
+  * debian/patches/*.dpatch:
+    - all patches are updated to satisfy upstream Ruby source location (in
+      'source' subdirectory)
+  * debian/rules: DPATCH_WORKDIR setting and supporting rules are removed.
+
+ -- Leonid Borisenko <leo.borisenko@gmail.com>  Sun, 23 May 2010 19:55:27 +0300
+
 rubyee1.8 (1.8.7.2010.01-1) lenny; urgency=low
 
   * Initial release.
